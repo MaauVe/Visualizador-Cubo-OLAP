@@ -1,0 +1,183 @@
+/* --- Globales --- */
+body {
+    font-family: -apple-system, BlinkMacSystemFont, "Segoe UI", Roboto, Helvetica, Arial, sans-serif;
+    background-color: #f4f7f6;
+    color: #333;
+    margin: 0;
+    line-height: 1.6;
+}
+
+.container {
+    max-width: 1400px;
+    margin: 0 auto;
+    padding: 20px;
+}
+
+nav {
+    background-color: #005f73;
+    color: white;
+    padding: 1rem 2rem;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+}
+
+nav h1 {
+    margin: 0;
+    font-size: 1.5rem;
+}
+
+footer {
+    text-align: center;
+    padding: 20px;
+    margin-top: 40px;
+    color: #777;
+    border-top: 1px solid #ddd;
+}
+
+section {
+    background-color: #ffffff;
+    border-radius: 8px;
+    box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+    padding: 24px;
+    margin-bottom: 30px;
+}
+
+h2 {
+    color: #005f73;
+    border-bottom: 2px solid #94d2bd;
+    padding-bottom: 10px;
+    margin-top: 0;
+}
+
+/* --- Formularios OLAP --- */
+.form-olap {
+    background: #fdfdfd;
+    border: 1px solid #e0e0e0;
+    border-radius: 8px;
+    padding: 20px;
+    margin-bottom: 20px;
+}
+
+.form-olap fieldset {
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    padding: 10px 15px;
+    margin-bottom: 15px;
+}
+
+.form-olap legend {
+    font-weight: bold;
+    color: #0a9396;
+    padding: 0 5px;
+}
+
+.form-grupo {
+    margin-bottom: 10px;
+    display: flex;
+    align-items: center;
+    flex-wrap: wrap;
+}
+
+.form-grupo label {
+    font-weight: 500;
+    margin-right: 10px;
+    min-width: 80px;
+}
+
+.form-grupo input[type="checkbox"] {
+    margin-right: 5px;
+}
+.form-grupo input[type="checkbox"] + label {
+    font-weight: normal;
+    min-width: unset;
+    margin-right: 15px;
+}
+
+.form-grupo select {
+    padding: 8px;
+    border: 1px solid #ccc;
+    border-radius: 4px;
+    font-size: 1rem;
+}
+
+button[type="submit"] {
+    background-color: #0a9396;
+    color: white;
+    border: none;
+    padding: 10px 20px;
+    font-size: 1rem;
+    font-weight: bold;
+    border-radius: 4px;
+    cursor: pointer;
+    transition: background-color 0.2s ease;
+}
+
+button[type="submit"]:hover {
+    background-color: #005f73;
+}
+
+/* --- Contenedores de Tablas --- */
+.tabla-contenedor,
+.tabla-contenedor-crudo {
+    overflow-x: auto; /* Permite scroll horizontal en tablas grandes */
+}
+
+/* --- Estilos de Tablas OLAP (Pivoteadas) --- */
+.tabla-olap {
+    border-collapse: collapse;
+    width: 100%;
+    margin-bottom: 20px;
+    font-size: 0.9rem;
+    text-align: right;
+}
+
+.tabla-olap th,
+.tabla-olap td {
+    border: 1px solid #ddd;
+    padding: 8px 10px;
+}
+
+.tabla-olap th {
+    background-color: #f0f8ff; /* Azul claro */
+    text-align: left;
+    position: sticky; /* Fija cabeceras */
+    left: 0;
+    z-index: 1;
+}
+
+.tabla-olap thead th {
+    background-color: #e0f2fe; /* Azul más oscuro */
+    text-align: center;
+    position: sticky;
+    top: 0;
+    z-index: 2;
+}
+
+.tabla-olap tbody th {
+    font-weight: bold;
+}
+
+/* --- Estilos de Tablas de Datos Crudos --- */
+.tabla-datos-crudos {
+    border-collapse: collapse;
+    width: 100%;
+    margin-bottom: 20px;
+    font-size: 0.9rem;
+}
+
+.tabla-datos-crudos th,
+.tabla-datos-crudos td {
+    border: 1px solid #ddd;
+    padding: 8px 10px;
+    text-align: left;
+}
+
+.tabla-datos-crudos thead th {
+    background-color: #f4f4f4;
+    font-weight: bold;
+    position: sticky;
+    top: 0;
+}
+
+.tabla-datos-crudos tbody tr:nth-child(even) {
+    background-color: #f9f9f9;
+}
