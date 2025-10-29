@@ -1,105 +1,15 @@
 {% extends "base.html" %}
 
 {% block content %}
-
     <section>
-        <h2>c.iii) El Cubo Completo (Base)</h2>
-        <p>Ventas por Producto/Región vs Año/Trimestre.</p>
-        <div class="tabla-contenedor">
-            {{ html_cubo_completo | safe }}
-        </div>
+        <h2>Bienvenido al Dashboard de Análisis OLAP</h2>
+        <p>Esta aplicación demuestra las operaciones de un Cubo OLAP (Procesamiento Analítico en Línea) utilizando Flask y Pandas.</p>
+        <p>Use la barra de navegación de arriba para explorar las diferentes vistas:</p>
+        <ul>
+            <li><strong>Cubo Completo:</strong> Muestra la vista pivoteada principal (Producto/Región vs Año/Trimestre).</li>
+            <li><strong>Cara:</strong> Muestra una vista 2D diferente (Pivot) del cubo (Año vs Región).</li>
+            <li><strong>Sección:</strong> Permite filtrar (Dice) el cubo por múltiples dimensiones (Años, Regiones) y ver el resultado agregado.</li>
+            <li><strong>Drill-Through:</strong> Permite "perforar" una celda específica del cubo para ver los datos crudos que la componen.</li>
+        </ul>
     </section>
-
-    <section>
-        <h2>c.i) Una Cara del Cubo (Pivot)</h2>
-        <p>Ventas por Año vs Región.</p>
-        <div class="tabla-contenedor">
-            {{ html_cara_cubo | safe }}
-        </div>
-    </section>
-
-    <section>
-        <h2>c.ii) Una Sección del Cubo (Dice)</h2>
-        <p>Selecciona un subconjunto de dimensiones para crear un "sub-cubo".</p>
-        
-        <form method="POST" action="/" class="form-olap">
-            <input type="hidden" name="form_name" value="seccion">
-            
-            <fieldset>
-                <legend>Filtros de Sección</legend>
-                <div class="form-grupo">
-                    <label>Años:</label>
-                    {% for anio in opciones.anios %}
-                        <input type="checkbox" name="seccion_anios" value="{{ anio }}"
-                               {% if anio in sel_seccion.anios %}checked{% endif %}> {{ anio }}
-                    {% endfor %}
-                </div>
-                <div class="form-grupo">
-                    <label>Regiones:</label>
-                    {% for reg in opciones.regiones %}
-                        <input type="checkbox" name="seccion_regiones" value="{{ reg }}"
-                               {% if reg in sel_seccion.regiones %}checked{% endif %}> {{ reg }}
-                    {% endfor %}
-                </div>
-            </fieldset>
-            <button type="submit">Filtrar Sección</button>
-        </form>
-
-        <h3>Resultado de la Sección</h3>
-        <div class="tabla-contenedor">
-            {{ html_seccion | safe }}
-        </div>
-    </section>
-
-    <section>
-        <h2>c.iv) Datos de una Celda (Drill-Through)</h2>
-        <p>Selecciona las coordenadas de una celda para ver los datos crudos que la componen.</p>
-
-        <form method="POST" action="/" class="form-olap">
-            <input type="hidden" name="form_name" value="drill">
-
-            <fieldset>
-                <legend>Coordenadas de la Celda</legend>
-                <div class="form-grupo">
-                    <label for="drill_anio">Año:</label>
-                    <select name="drill_anio" id="drill_anio">
-                        {% for anio in opciones.anios %}
-                            <option value="{{ anio }}" {% if anio == sel_drill.anio %}selected{% endif %}>{{ anio }}</option>
-                        {% endfor %}
-                    </select>
-                </div>
-                <div class="form-grupo">
-                    <label for="drill_trim">Trimestre:</label>
-                    <select name="drill_trim" id="drill_trim">
-                        {% for trim in opciones.trimestres %}
-                            <option value="{{ trim }}" {% if trim == sel_drill.trim %}selected{% endif %}>{{ trim }}</option>
-                        {% endfor %}
-                    </select>
-                </div>
-                <div class="form-grupo">
-                    <label for="drill_prod">Producto:</label>
-                    <select name="drill_prod" id="drill_prod">
-                        {% for prod in opciones.productos %}
-                            <option value="{{ prod }}" {% if prod == sel_drill.prod %}selected{% endif %}>{{ prod }}</option>
-                        {% endfor %}
-                    </select>
-                </div>
-                <div class="form-grupo">
-                    <label for="drill_reg">Región:</label>
-                    <select name="drill_reg" id="drill_reg">
-                        {% for reg in opciones.regiones %}
-                            <option value="{{ reg }}" {% if reg == sel_drill.reg %}selected{% endif %}>{{ reg }}</option>
-                        {% endfor %}
-                    </select>
-                </div>
-            </fieldset>
-            <button type="submit">Ver Datos de Celda</button>
-        </form>
-
-        <h3>Datos Crudos de la Celda</h3>
-        <div class="tabla-contenedor-crudo">
-            {{ html_drill | safe }}
-        </div>
-    </section>
-
 {% endblock %}

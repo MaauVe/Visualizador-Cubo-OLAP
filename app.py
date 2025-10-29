@@ -1,88 +1,76 @@
 import pandas as pd
 from flask import Flask, render_template, request
 
-# Importa tus funciones desde la carpeta 'funciones'
+# Importa tus funciones (sin cambios aquí)
 from funciones.generarDatos import generar_dataset
 from funciones.crearCubo import cubo_base
-from funciones.operacionesCubo import (
-    pivot_anio_region,
-    dice_subset,
-    drilldown_producto_region # Usaremos esta para el drill-through
-)
+from funciones.operacionesCubo import pivot_anio_region, dice_subset
 
-# --- Configuración de la App ---
+# --- Configuración y Carga de Datos (Sin cambios) ---
 app = Flask(__name__)
-
-# --- Carga de Datos Global ---
-# Cargamos los datos una sola vez al iniciar el servidor
 print("Cargando dataset...")
 df = generar_dataset(seed=42)
 print("Dataset cargado.")
 
-# Opciones para los menús desplegables (calculadas una vez)
+# Opciones globales para los menús desplegables
 TODOS_ANIOS = sorted(df['Año'].unique())
 TODOS_TRIMESTRES = sorted(df['Trimestre'].unique())
 TODOS_PRODUCTOS = sorted(df['Producto'].unique())
 TODAS_REGIONES = sorted(df['Región'].unique())
 
-# --- Formateador de números para las tablas HTML ---
-# Esto hace que los números se vean bien (ej. 1,234.56)
 pd.set_option('display.float_format', '{:,.2f}'.format)
 
+# --- Definición de Rutas (La Gran Mejora) ---
 
-@app.route('/', methods=['GET', 'POST'])
+@app.route('/')
 def index():
-    """
-    Ruta principal que maneja toda la lógica del punto (c).
-    """
-    
-    # --- c.iii) Cubo Completo (Siempre se muestra) ---
+    """Ruta 'Home': Muestra la página de bienvenida y navegación."""
+    # 'active_page' le dirá a la barra de navegación qué botón resaltar
+    return render_template('index.html', active_page='home')
+
+@app.route('/cubo-completo')
+def cubo_completo():
+    """Ruta para c.iii: Muestra el cubo completo."""
     cubo = cubo_base(df)
-    # Convertimos el DataFrame a HTML, dándole una clase CSS
-    html_cubo_completo = cubo.to_html(classes='tabla-olap', na_rep='-')
+    html_cubo = cubo.to_html(classes='tabla-olap', na_rep='-')
+    return render_template(
+        'cubo_completo.html',
+        html_cubo=html_cubo,
+        active_page='cubo_completo'
+    )
 
-    # --- c.i) Una Cara del Cubo (Pivot) (Siempre se muestra) ---
+@app.route('/cara')
+def cara():
+    """Ruta para c.i: Muestra una cara del cubo (Pivot)."""
     piv = pivot_anio_region(df)
-    html_cara_cubo = piv.to_html(classes='tabla-olap', na_rep='-')
+    html_cara = piv.to_html(classes='tabla-olap', na_rep='-')
+    return render_template(
+        'cara.html',
+        html_cara=html_cara,
+        active_page='cara'
+    )
 
-    # --- Valores por defecto para los formularios ---
-    # Sección (Dice)
+@app.route('/seccion', methods=['GET', 'POST'])
+def seccion():
+    """Ruta para c.ii: Página interactiva para 'Sección' (Dice)."""
+    
+    # Valores por defecto para el primer render (GET)
     sel_seccion = {
         'anios': [2024, 2025],
         'regiones': ['Norte', 'Sur']
     }
-    # Drill-Through
-    sel_drill = {
-        'anio': 2024,
-        'trim': 1,
-        'prod': 'A',
-        'reg': 'Norte'
-    }
 
-    # --- Procesamiento de Formularios (si se envía uno) ---
+    # Si se envía el formulario (POST)
     if request.method == 'POST':
-        # Identificamos qué formulario se envió
-        form_name = request.form.get('form_name')
-        
-        if form_name == 'seccion':
-            # c.ii) Actualizar valores de SECCIÓN
-            sel_seccion['anios'] = [int(a) for a in request.form.getlist('seccion_anios')]
-            sel_seccion['regiones'] = request.form.getlist('seccion_regiones')
-        
-        elif form_name == 'drill':
-            # c.iv) Actualizar valores de DRILL-THROUGH
-            sel_drill['anio'] = int(request.form.get('drill_anio'))
-            sel_drill['trim'] = int(request.form.get('drill_trim'))
-            sel_drill['prod'] = request.form.get('drill_prod')
-            sel_drill['reg'] = request.form.get('drill_reg')
+        sel_seccion['anios'] = [int(a) for a in request.form.getlist('seccion_anios')]
+        sel_seccion['regiones'] = request.form.getlist('seccion_regiones')
 
-    # --- c.ii) Lógica de la Sección (Dice) ---
+    # Esta lógica se ejecuta en GET (con valores por defecto) y en POST (con valores del form)
     df_seccion = dice_subset(
         df,
         anios=sel_seccion['anios'],
         regiones=sel_seccion['regiones']
     )
-    # Creamos la vista agregada de esa sección
     vista_seccion = pd.pivot_table(
         df_seccion,
         values="Ventas",
@@ -94,43 +82,56 @@ def index():
     )
     html_seccion = vista_seccion.to_html(classes='tabla-olap', na_rep='-')
 
-    # --- c.iv) Lógica de Datos de Celda (Drill-Through) ---
-    # Usamos 'dice' para encontrar los registros exactos
+    return render_template(
+        'seccion.html',
+        html_seccion=html_seccion,
+        opciones={'anios': TODOS_ANIOS, 'regiones': TODAS_REGIONES},
+        sel_seccion=sel_seccion,
+        active_page='seccion'
+    )
+
+@app.route('/drill', methods=['GET', 'POST'])
+def drill():
+    """Ruta para c.iv: Página interactiva para 'Drill-Through'."""
+    
+    # Valores por defecto
+    sel_drill = {
+        'anio': 2024,
+        'trim': 1,
+        'prod': 'A',
+        'reg': 'Norte'
+    }
+
+    if request.method == 'POST':
+        sel_drill['anio'] = int(request.form.get('drill_anio'))
+        sel_drill['trim'] = int(request.form.get('drill_trim'))
+        sel_drill['prod'] = request.form.get('drill_prod')
+        sel_drill['reg'] = request.form.get('drill_reg')
+
+    # Lógica del Drill-Through
     df_datos_celda = dice_subset(
         df,
         anios=[sel_drill['anio']],
         regiones=[sel_drill['reg']],
         productos=[sel_drill['prod']]
     )
-    # Filtramos por trimestre (dice_subset no lo incluye)
     df_datos_celda = df_datos_celda[
         df_datos_celda["Trimestre"] == sel_drill['trim']
     ].copy()
     html_drill = df_datos_celda.to_html(classes='tabla-datos-crudos', index=False)
-
-
-    # --- Renderizar el Template ---
-    # Pasamos todas las variables al archivo index.html
+    
     return render_template(
-        'index.html',
-        # Tablas HTML
-        html_cubo_completo=html_cubo_completo,
-        html_cara_cubo=html_cara_cubo,
-        html_seccion=html_seccion,
+        'drill.html',
         html_drill=html_drill,
-        # Opciones para los <select> y checkboxes
         opciones={
             'anios': TODOS_ANIOS,
             'trimestres': TODOS_TRIMESTRES,
             'productos': TODOS_PRODUCTOS,
             'regiones': TODAS_REGIONES
         },
-        # Valores seleccionados para repoblar los formularios
-        sel_seccion=sel_seccion,
-        sel_drill=sel_drill
+        sel_drill=sel_drill,
+        active_page='drill'
     )
 
-
 if __name__ == "__main__":
-    # Inicia el servidor en modo de depuración
     app.run(debug=True)

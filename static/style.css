@@ -181,3 +181,59 @@ button[type="submit"]:hover {
 .tabla-datos-crudos tbody tr:nth-child(even) {
     background-color: #f9f9f9;
 }
+
+/* --- Estilos de Navegación --- */
+nav {
+    background-color: #005f73; /* Azul oscuro */
+    color: white;
+    padding: 0 2rem;
+    box-shadow: 0 2px 4px rgba(0,0,0,0.1);
+    width: 100%;
+    position: sticky; /* Fija la barra al hacer scroll */
+    top: 0;
+    z-index: 1000;
+}
+
+.nav-container {
+    display: flex;
+    justify-content: space-between;
+    align-items: center;
+    max-width: 1400px;
+    margin: 0 auto;
+}
+
+.nav-brand {
+    font-size: 1.5rem;
+    font-weight: bold;
+    color: white;
+    text-decoration: none;
+    padding: 0.75rem 0;
+}
+
+nav ul {
+    list-style: none;
+    margin: 0;
+    padding: 0;
+    display: flex;
+}
+
+nav ul li a {
+    display: block;
+    color: #e0f2fe; /* Azul claro */
+    text-decoration: none;
+    padding: 1rem 1.25rem;
+    font-weight: 500;
+    transition: background-color 0.2s ease, color 0.2s ease;
+}
+
+/* Estado hover y estado activo */
+nav ul li a:hover {
+    background-color: #0a9396; /* Verde azulado */
+    color: white;
+}
+
+nav ul li a.active {
+    background-color: #94d2bd; /* Verde claro */
+    color: #005f73; /* Azul oscuro */
+    font-weight: bold;
+}

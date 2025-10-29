@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <section>
+        <h2>c.iii) El Cubo Completo (Base)</h2>
+        <p>Ventas por Producto/Región vs Año/Trimestre.</p>
+        <div class="tabla-contenedor">
+            {{ html_cubo | safe }}
+        </div>
+    </section>
+{% endblock %}

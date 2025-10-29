@@ -8,7 +8,25 @@
 </head>
 <body>
     <nav>
-        <h1>Mi Dashboard OLAP</h1>
+        <div class="nav-container">
+            <a class="nav-brand" href="{{ url_for('index') }}">Dashboard OLAP</a>
+            <ul>
+                <li><a href="{{ url_for('index') }}" 
+                       class="{{ 'active' if active_page == 'home' else '' }}">Home</a></li>
+                
+                <li><a href="{{ url_for('cubo_completo') }}" 
+                       class="{{ 'active' if active_page == 'cubo_completo' else '' }}">Cubo Completo (c.iii)</a></li>
+                
+                <li><a href="{{ url_for('cara') }}" 
+                       class="{{ 'active' if active_page == 'cara' else '' }}">Cara (c.i)</a></li>
+
+                <li><a href="{{ url_for('seccion') }}" 
+                       class="{{ 'active' if active_page == 'seccion' else '' }}">Sección (c.ii)</a></li>
+                
+                <li><a href="{{ url_for('drill') }}" 
+                       class="{{ 'active' if active_page == 'drill' else '' }}">Drill-Through (c.iv)</a></li>
+            </ul>
+        </div>
     </nav>
     
     <main class="container">

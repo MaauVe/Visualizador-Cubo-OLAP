@@ -1,0 +1,33 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <section>
+        <h2>c.ii) Una Sección del Cubo (Dice)</h2>
+        <p>Selecciona un subconjunto de dimensiones para crear un "sub-cubo".</p>
+        
+        <form method="POST" action="" class="form-olap"> <fieldset>
+                <legend>Filtros de Sección</legend>
+                <div class="form-grupo">
+                    <label>Años:</label>
+                    {% for anio in opciones.anios %}
+                        <input type="checkbox" name="seccion_anios" value="{{ anio }}"
+                               {% if anio in sel_seccion.anios %}checked{% endif %}> {{ anio }}
+                    {% endfor %}
+                </div>
+                <div class="form-grupo">
+                    <label>Regiones:</label>
+                    {% for reg in opciones.regiones %}
+                        <input type="checkbox" name="seccion_regiones" value="{{ reg }}"
+                               {% if reg in sel_seccion.regiones %}checked{% endif %}> {{ reg }}
+                    {% endfor %}
+                </div>
+            </fieldset>
+            <button type="submit">Filtrar Sección</button>
+        </form>
+
+        <h3>Resultado de la Sección</h3>
+        <div class="tabla-contenedor">
+            {{ html_seccion | safe }}
+        </div>
+    </section>
+{% endblock %}

@@ -1,0 +1,11 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <section>
+        <h2>c.i) Una Cara del Cubo (Pivot)</h2>
+        <p>Ventas por Año vs Región.</p>
+        <div class="tabla-contenedor">
+            {{ html_cara | safe }}
+        </div>
+    </section>
+{% endblock %}

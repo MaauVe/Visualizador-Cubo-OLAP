@@ -1,0 +1,52 @@
+{% extends "base.html" %}
+
+{% block content %}
+    <section>
+        <h2>c.iv) Datos de una Celda (Drill-Through)</h2>
+        <p>Selecciona las coordenadas de una celda para ver los datos crudos que la componen.</p>
+
+        <form method="POST" action="" class="form-olap">
+            <fieldset>
+                <legend>Coordenadas de la Celda</legend>
+                <div class="form-grupo">
+                    <label for="drill_anio">Año:</label>
+                    <select name="drill_anio" id="drill_anio">
+                        {% for anio in opciones.anios %}
+                            <option value="{{ anio }}" {% if anio == sel_drill.anio %}selected{% endif %}>{{ anio }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="form-grupo">
+                    <label for="drill_trim">Trimestre:</label>
+                    <select name="drill_trim" id="drill_trim">
+                        {% for trim in opciones.trimestres %}
+                            <option value="{{ trim }}" {% if trim == sel_drill.trim %}selected{% endif %}>{{ trim }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="form-grupo">
+                    <label for="drill_prod">Producto:</label>
+                    <select name="drill_prod" id="drill_prod">
+                        {% for prod in opciones.productos %}
+                            <option value="{{ prod }}" {% if prod == sel_drill.prod %}selected{% endif %}>{{ prod }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+                <div class="form-grupo">
+                    <label for="drill_reg">Región:</label>
+                    <select name="drill_reg" id="drill_reg">
+                        {% for reg in opciones.regiones %}
+                            <option value="{{ reg }}" {% if reg == sel_drill.reg %}selected{% endif %}>{{ reg }}</option>
+                        {% endfor %}
+                    </select>
+                </div>
+            </fieldset>
+            <button type="submit">Ver Datos de Celda</button>
+        </form>
+
+        <h3>Datos Crudos de la Celda</h3>
+        <div class="tabla-contenedor-crudo">
+            {{ html_drill | safe }}
+        </div>
+    </section>
+{% endblock %}
